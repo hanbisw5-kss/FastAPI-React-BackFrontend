@@ -19,7 +19,7 @@ function App() {
   // 사용자 목록을 가져오는 비동기 함수
   const fetchUsers = async () => {
     try {
-      const result = await axios.get('http://localhost:8000/api/v1/users/');
+      const result = await axios.get('http://localhost:8000/api/v2/users/');
       setUsers(result.data);  // 사용자 목록 상태를 업데이트합니다.
     } catch (error) {
       console.error("Failed to fetch users:", error);

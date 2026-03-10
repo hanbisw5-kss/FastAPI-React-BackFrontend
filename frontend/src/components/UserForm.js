@@ -26,10 +26,10 @@ function UserForm({ user, setUser, fetchUsers }) {
     try {
       if (user) {
         // 기존 사용자 업데이트 요청
-        await axios.put(`http://localhost:8000/api/v1/users/${user.id}`, userData);
+        await axios.put(`http://localhost:8000/api/v2/users/${user.id}`, userData);
       } else {
         // 새로운 사용자 생성 요청
-        await axios.post('http://localhost:8000/api/v1/users/', userData);
+        await axios.post('http://localhost:8000/api/v2/users/', userData);
       }
       fetchUsers();  // 사용자 목록을 다시 가져옵니다.
       setUser(null);  // 폼을 초기 상태로 리셋합니다.

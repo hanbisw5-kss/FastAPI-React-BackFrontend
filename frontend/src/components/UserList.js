@@ -11,8 +11,9 @@ import axios from 'axios';
 function UserList({ users, setEditingUser, fetchUsers }) {
   // 사용자 삭제 이벤트 핸들러
   const handleDelete = async (id) => {
+    console.log({id})
     try {
-      await axios.delete(`http://localhost:8000/api/v1/users/${id}`);
+      await axios.delete(`http://localhost:8000/api/v2/users/${id}`);
       fetchUsers();  // 사용자 목록을 다시 가져옵니다.
     } catch (error) {
       console.error("Failed to delete user:", error);
