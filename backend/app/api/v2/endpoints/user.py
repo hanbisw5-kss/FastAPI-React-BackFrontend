@@ -6,7 +6,7 @@ from app.crud.user import get_user, create_user, update_user, delete_user, get_u
 from app.schemas.user import UserCreate, User, UserUpdate
 from typing import List
 
-from app.core.config import get_db
+from app.core.config import get_db 
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ router = APIRouter()
 @router.get("/", response_model=List[User])
 async def read_users(db: AsyncSession = Depends(get_db)):
     # users = get_users(db)
-    return  await get_users(db)
+    return await get_users(db)
 
 
 @router.post("/", response_model=User)

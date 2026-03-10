@@ -1,3 +1,14 @@
+import datetime
+from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    id: int
+    username: str  # 사용자명: 문자열
+    email: str  # 이메일: 문자열
+    # password: str  # 비밀번호: 문자열
+
+
+
 from pydantic import BaseModel, ConfigDict
 
 # 공통 속성을 정의하는 기본 클래스
@@ -25,9 +36,13 @@ class UserInDBBase(UserBase):
     # class Config:
     #     orm_mode = True  # ORM과 호환되도록 설정
 
-# 클라이언트에 반환할 사용자 정보를 위한 클래스
-class User(UserInDBBase):
-    pass  # UserInDBBase를 그대로 상속받아 사용
+# # 클라이언트에 반환할 사용자 정보를 위한 클래스
+# class User(BaseModel):
+#     model_config = ConfigDict(from_attributes=True) # The new configuration
+
+#     username: str  # 사용자명: 문자열
+#     email: str  # 이메일: 문자열
+#     password: str  # 비밀번호: 문자열
 
 
 """ 

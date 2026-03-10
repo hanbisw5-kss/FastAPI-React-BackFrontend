@@ -1,6 +1,7 @@
 from sqlalchemy import select, text
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
@@ -14,11 +15,13 @@ from app.core.security import get_password_hash
 async def get_users(db: AsyncSession):
     # db.query(User): User 테이블에서 쿼리 생성
     # .all(): 모든 레코드 반환
-    result: Result = await db.execute(select(User)) 
-    db.close()
-    results_as_dict = result.fetchall()
-    print(results_as_dict)
-    return results_as_dict
+    # result: Result = db.execute(text("select username,email,hashed_password from users")) 
+    result: Result = await db.execute(text("select id,username,email from users")) 
+    # result: Result = db.execute(select(User)) 
+    await db.close()
+    # results_as_dict = result.fetchall()
+    print(result)
+    return result
 
 # 특정 사용자를 ID로 조회하는 함수
 def get_user(db: AsyncSession, user_id: int):
@@ -35,19 +38,44 @@ def get_user_by_email(db: AsyncSession, email: str):
     return db.query(User).filter(User.email == email).first()
 
 # 새로운 사용자를 생성하는 함수
-def create_user(db: AsyncSession, user: UserCreate):
+async def create_user(db: AsyncSession, user: UserCreate):
+    print(user)
     # 비밀번호 해시화 (암호화)
     hashed_password = get_password_hash(user.password)
+    print(hashed_password)
     # User 인스턴스 생성 (새 사용자)
-    db_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    # db_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    
+    
+    query_in = text("insert into users (username,email,hashed_password,is_active)  \
+                values (:username,:email,:hashed_password,1)")
+    # t = {user.username,user.email, hashed_password}
+    t = {"username":user.username, "email":user.email, "hashed_password":hashed_password}
+    
+    try:
+        await db.execute(query_in,t)
+        # await db.commit()
+    except SQLAlchemyError  as e:
+        await db.rollback()  # 에러 발생 시 롤백 
+        await db.close()  # 세션 닫기
+        print(f"Error: {e}")
+    finally:
+        await db.commit()
+        await db.close()  # 세션 닫기
+
+    # print(db_user)
     # 데이터베이스에 새 사용자 추가
-    db.add(db_user)
-    # 변경 사항 커밋 (저장)
-    db.commit()
+    # db.add(db_user)
+    # # db.execute(db_user)
+    # # 변경 사항 커밋 (저장)
+    # await db.commit()
     # 새 사용자 정보를 새로 고침하여 최신 상태 반영
-    db.refresh(db_user)
+    # await db.refresh(db_user)
+    # await db.close()
     # 새 사용자 반환
-    return db_user
+    # db_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+
+    return t
 
 # 기존 사용자를 업데이트하는 함수
 def update_user(db: AsyncSession, user_id: int, user: UserUpdate):
