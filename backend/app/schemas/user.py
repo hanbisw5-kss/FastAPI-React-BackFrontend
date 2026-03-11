@@ -1,15 +1,11 @@
 import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
-class User(BaseModel):
+class User_iue(BaseModel):
     id: int
     username: str  # 사용자명: 문자열
     email: str  # 이메일: 문자열
     # password: str  # 비밀번호: 문자열
-
-
-
-from pydantic import BaseModel, ConfigDict
 
 # 공통 속성을 정의하는 기본 클래스
 class UserBase(BaseModel):
