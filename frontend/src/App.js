@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserForm from './components/UserForm';
 import UserList from './components/UserList';
+import UserTable from './components/UserTable';
 
 function App() {
   // useState 훅을 사용하여 사용자 목록과 편집할 사용자 상태를 관리합니다.
@@ -45,6 +46,12 @@ function App() {
         users={users}
         setEditingUser={setEditingUser}
         fetchUsers={fetchUsers}
+      />
+      {/* 사용자 목록 table */}
+      <UserTable
+        // users={users}
+        // setEditingUser={setEditingUser}
+        // fetchUsers={fetchUsers}
       />
     </div>
   );
